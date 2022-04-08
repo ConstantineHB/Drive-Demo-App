@@ -59,21 +59,33 @@ class _MyHomePageState extends State<MyHomePage> {
     return Column(children: [for (int i = 0; i < sampleList.length; i++) ListTile(title: Text(sampleList[i]))]);
   }
 
+  Widget dialogCancelButton() {
+    return TextButton(
+      child: const Text('Cancel'),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  Widget dialogAddButton() {
+    return TextButton(
+      child: const Text('Add'),
+      onPressed: () {
+        setState(() {
+          sampleList.add(sampleInputController.text.trim());
+          sampleInputController.clear(); //RESET INPUT FIELD
+        });
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   Widget dialogWidget() {
     return AlertDialog(
       title: const Text('Add Something to the list'),
       content: TextFormField(controller: sampleInputController),
-      actions: <Widget>[
-        TextButton(
-          child: const Text('Add Item'),
-          onPressed: () {
-            setState(() {
-              sampleList.add(sampleInputController.text.trim());
-            });
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
+      actions: <Widget>[dialogCancelButton(), dialogAddButton()],
     );
   }
 
@@ -81,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> showInputDialog() async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return dialogWidget();
       },
